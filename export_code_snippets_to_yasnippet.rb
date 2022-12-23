@@ -2,8 +2,20 @@
 
 require 'json'
 require 'pathname'
+require 'optparse'
 
 filename_to_mode = { "objective-c" => "objc" }
+
+options = { :force => false, :overwrite => false }
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+  opts.on("-f", "--force", "Force") do
+    options[:verbose] = true
+  end
+  opts.on("-o", "--overwrite", "Overwrite") do
+    options[:overwrite] = true
+  end
+end.parse!
 
 code_snippets_path = "#{Dir.home}/.config/Code/User/snippets"
 unless File.directory?(code_snippets_path)
@@ -34,7 +46,14 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
 # --
 #{body}"
     dest_path = File.join(dest_dir, prefix)
-    puts dest_path
-    puts "#{template}\n\n"
+    unless options[:force]
+      puts "#{template}\n\n"
+    else
+      if !File.exists?(dest_path) || options[:overwrite]
+        puts "Writing ${dest_path} because it exists"
+      else
+        puts "Ignoring ${dest_path} because it exists"
+      end
+    end
   end
 end

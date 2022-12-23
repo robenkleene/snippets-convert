@@ -47,10 +47,11 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
 #{body}"
     dest_path = File.join(dest_dir, prefix)
     unless options[:force]
-      # puts "#{template}\n\n"
+      puts dest_path
+      puts "#{template}\n\n"
     else
       if !File.exists?(dest_path) || options[:overwrite]
-        puts "Writing #{dest_path}"
+        File.write(dest_path, template)
       else
         puts "Ignoring #{dest_path} because it exists"
       end

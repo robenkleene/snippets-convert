@@ -22,7 +22,7 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   json = JSON.parse(contents)
   filename = File.basename(file_path, File.extname(file_path))
   mode = filename_to_mode[filename].nil? ? filename : filename_to_mode[filename]
-  dest_dir = File.join(yasnippets_snippets_path, "#{filename}-mode")
+  dest_dir = File.join(yasnippets_snippets_path, "#{mode}-mode")
 
   json.each do | key, hash |
     prefix = hash['prefix']

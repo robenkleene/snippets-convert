@@ -10,7 +10,7 @@ options = { :force => false, :overwrite => false }
 OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
   opts.on("-f", "--force", "Force") do
-    options[:verbose] = true
+    options[:force] = true
   end
   opts.on("-o", "--overwrite", "Overwrite") do
     options[:overwrite] = true
@@ -23,7 +23,7 @@ unless File.directory?(code_snippets_path)
   exit 1
 end
 
-yasnippets_snippets_path = "#{Dir.home}/.config/Code/User/snippets"
+yasnippets_snippets_path = "#{Dir.home}/.emacs.d/snippets"
 unless File.directory?(yasnippets_snippets_path)
   STDERR.puts "YASnippets snippets dir #{yasnippets_snippets_path} not found"
   exit 1
@@ -47,12 +47,12 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
 #{body}"
     dest_path = File.join(dest_dir, prefix)
     unless options[:force]
-      puts "#{template}\n\n"
+      # puts "#{template}\n\n"
     else
       if !File.exists?(dest_path) || options[:overwrite]
-        puts "Writing ${dest_path} because it exists"
+        puts "Writing #{dest_path}"
       else
-        puts "Ignoring ${dest_path} because it exists"
+        puts "Ignoring #{dest_path} because it exists"
       end
     end
   end

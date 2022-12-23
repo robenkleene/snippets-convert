@@ -15,3 +15,6 @@ unless directory_exists?(yasnippets_snippets_path)
   exit 1
 end
 
+Dir.foreach("#{code_snippets_path}/*.json") do |filename|
+  puts "filename = " + filename
+end

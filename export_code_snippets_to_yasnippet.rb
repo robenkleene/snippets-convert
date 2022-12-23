@@ -4,7 +4,11 @@ require 'json'
 require 'pathname'
 require 'optparse'
 
-filename_to_mode = { "objective-c" => "objc" }
+filename_to_mode = {
+  "objective-c" => "objc",
+  "shellscript" => "sh",
+  "zsh" => nil
+}
 
 options = { :force => false, :overwrite => false }
 OptionParser.new do |opts|
@@ -14,6 +18,9 @@ OptionParser.new do |opts|
   end
   opts.on("-o", "--overwrite", "Overwrite") do
     options[:overwrite] = true
+  end
+  opts.on("-v", "--verbose", "Verbose") do
+    options[:verbose] = true
   end
 end.parse!
 
@@ -35,6 +42,10 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   filename = File.basename(file_path, File.extname(file_path))
   # Skip `package.json` which just defines file type to snippet file mappings
   next if filename == "package"
+  if filename_to_mode.has_key?(filename) && filename_to_mode[filename].nil?
+    puts "Skipping #{filename} because it's mode key is nil"
+    next
+  end
   mode = filename_to_mode[filename].nil? ? filename : filename_to_mode[filename]
   dest_dir = File.join(yasnippets_snippets_path, "#{mode}-mode")
 
@@ -48,8 +59,15 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
     dest_path = File.join(dest_dir, prefix)
     unless options[:force]
       puts dest_path
-      puts "#{template}\n\n"
+      if options[:verbose]
+        puts "#{template}\n\n"
+      end
     else
+      Dir.mkdir(dest_dir) unless File.exists?(dest_dir)
+      unless File.directory?(dest_dir)
+        STDERR.puts "Failed to create dir #{dest_dir}"
+        exit 1
+      end
       if !File.exists?(dest_path) || options[:overwrite]
         File.write(dest_path, template)
       else

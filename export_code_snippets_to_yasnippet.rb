@@ -21,6 +21,8 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   contents = File.read(file_path)
   json = JSON.parse(contents)
   filename = File.basename(file_path, File.extname(file_path))
+  # Skip `package.json` which just defines file type to snippet file mappings
+  next if filename == "package"
   mode = filename_to_mode[filename].nil? ? filename : filename_to_mode[filename]
   dest_dir = File.join(yasnippets_snippets_path, "#{mode}-mode")
 
@@ -31,8 +33,8 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
 # name: #{prefix}
 # --
 #{body}"
-    # puts "#{template}\n\n"
     dest_path = File.join(dest_dir, prefix)
     puts dest_path
+    puts "#{template}\n\n"
   end
 end

@@ -15,6 +15,9 @@ unless File.directory?(yasnippets_snippets_path)
 end
 
 Dir.glob("#{code_snippets_path}/*.json") do |filename|
-  puts "filename = " + filename
-  # JSON.parse(json_string)
+  contents = File.read(filename)
+  json = JSON.parse(contents)
+  json.each do | key, body |
+    puts "#{key}: $#{body}"
+  end
 end

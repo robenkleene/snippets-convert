@@ -7,12 +7,13 @@ require 'optparse'
 filename_to_mode = {
   "objective-c" => "objc",
   "shellscript" => "sh",
+  "javascript" => "js",
   "zsh" => nil
 }
 
 options = { :force => false, :overwrite => false }
 OptionParser.new do |opts|
-  opts.banner = "Usage: example.rb [options]"
+  opts.banner = "Usage: ./export_code_snippets_to_yasnippet.rb [options]"
   opts.on("-f", "--force", "Force") do
     options[:force] = true
   end
@@ -52,7 +53,8 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   json.each do | key, hash |
     prefix = hash['prefix']
     body = hash['body']
-    template = "# key: #{prefix}
+    template = "# -*- mode: snippet -*-
+# key: #{prefix}
 # name: #{prefix}
 # --
 #{body}"

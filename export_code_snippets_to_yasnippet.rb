@@ -13,14 +13,15 @@ filename_to_mode = {
 
 options = { force: false, overwrite: false }
 OptionParser.new do |opts|
+  # `./export_code_snippets_to_yasnippet.rb -h` for usage
   opts.banner = 'Usage: ./export_code_snippets_to_yasnippet.rb [options]'
-  opts.on('-f', '--force', 'Force') do
+  opts.on('-f', '--force', 'Dry run if missing') do
     options[:force] = true
   end
-  opts.on('-o', '--overwrite', 'Overwrite') do
+  opts.on('-o', '--overwrite', 'Overwrite existing files') do
     options[:overwrite] = true
   end
-  opts.on('-v', '--verbose', 'Verbose') do
+  opts.on('-v', '--verbose', 'Also output templates if dry run') do
     options[:verbose] = true
   end
 end.parse!

@@ -5,10 +5,10 @@ require 'pathname'
 require 'optparse'
 
 filename_to_mode = {
-  "objective-c" => "objc",
-  "shellscript" => "sh",
-  "javascript" => "js",
-  "zsh" => nil
+  'objective-c' => 'objc',
+  'shellscript' => 'sh',
+  'javascript' => 'js',
+  'zsh' => nil
 }
 
 options = { force: false, overwrite: false }
@@ -27,13 +27,13 @@ end.parse!
 
 code_snippets_path = "#{Dir.home}/.config/Code/User/snippets"
 unless File.directory?(code_snippets_path)
-  STDERR.puts "Code snippets dir #{code_snippets_path} not found"
+  warn "Code snippets dir #{code_snippets_path} not found"
   exit 1
 end
 
 yasnippets_snippets_path = "#{Dir.home}/.emacs.d/snippets"
 unless File.directory?(yasnippets_snippets_path)
-  STDERR.puts "YASnippets snippets dir #{yasnippets_snippets_path} not found"
+  warn "YASnippets snippets dir #{yasnippets_snippets_path} not found"
   exit 1
 end
 
@@ -42,15 +42,16 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   json = JSON.parse(contents)
   filename = File.basename(file_path, File.extname(file_path))
   # Skip `package.json` which just defines file type to snippet file mappings
-  next if filename == "package"
-  if filename_to_mode.has_key?(filename) && filename_to_mode[filename].nil?
+  next if filename == 'package'
+
+  if filename_to_mode.key?(filename) && filename_to_mode[filename].nil?
     puts "Skipping #{filename} because it's mode key is nil"
     next
   end
   mode = filename_to_mode[filename].nil? ? filename : filename_to_mode[filename]
   dest_dir = File.join(yasnippets_snippets_path, "#{mode}-mode")
 
-  json.each do | key, hash |
+  json.each do |_, hash|
     prefix = hash['prefix']
     body = hash['body']
     template = "# -*- mode: snippet -*-

@@ -62,16 +62,14 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
     dest_path = File.join(dest_dir, prefix)
     unless options[:force]
       puts dest_path
-      if options[:verbose]
-        puts "#{template}\n\n"
-      end
+      puts "#{template}\n\n" if options[:verbose]
     else
-      Dir.mkdir(dest_dir) unless File.exists?(dest_dir)
+      Dir.mkdir(dest_dir) unless File.exist?(dest_dir)
       unless File.directory?(dest_dir)
-        STDERR.puts "Failed to create dir #{dest_dir}"
+        warn "Failed to create dir #{dest_dir}"
         exit 1
       end
-      if !File.exists?(dest_path) || options[:overwrite]
+      if !File.exist?(dest_path) || options[:overwrite]
         File.write(dest_path, template)
       else
         puts "Ignoring #{dest_path} because it exists"

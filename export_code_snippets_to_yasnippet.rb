@@ -55,6 +55,7 @@ Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   json.each do |_, hash|
     prefix = hash['prefix']
     body = hash['body']
+    body = body.join("\n") if body.instance_of?(Array)
     template = "# -*- mode: snippet -*-
 # key: #{prefix}
 # name: #{prefix}

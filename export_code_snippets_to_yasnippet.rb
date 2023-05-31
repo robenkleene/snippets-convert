@@ -38,6 +38,11 @@ unless File.directory?(yasnippets_snippets_path)
   exit 1
 end
 
+unless options[:force]
+  puts 'Dry Run'
+  puts
+end
+
 Dir.glob("#{code_snippets_path}/*.json") do |file_path|
   contents = File.read(file_path)
   json = JSON.parse(contents)
